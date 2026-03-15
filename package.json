@@ -1,5 +1,5 @@
 {
-  "name": "telegram-bot-vercel",
+  "name": "minecraft-status-bot",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
@@ -7,6 +7,6 @@
   },
   "dependencies": {
     "node-telegram-bot-api": "^0.61.0",
-    "minecraft-server-util": "^5.2.0"
+    "mcstatus": "^1.0.0"
   }
 }
