@@ -1,13 +1,16 @@
 {
-  "name": "minecraft-status-bot-pro",
+  "name": "minecraft-telegram-bot",
   "version": "1.0.0",
-  "type": "module",
+  "description": "A Telegram bot to check Minecraft server status and info",
+  "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
+  "engines": {
+    "node": "18.x"
+  },
   "dependencies": {
-    "node-telegram-bot-api": "^0.61.3",
-    "mcstatus": "^2.1.0",
-    "uuid": "^9.0.0"
+    "axios": "^1.7.5",
+    "node-telegram-bot-api": "^0.61.0"
   }
 }
