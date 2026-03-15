@@ -1,7 +1,7 @@
 {
   "name": "minecraft-telegram-bot",
   "version": "1.0.0",
-  "description": "A Telegram bot to check Minecraft server status and info",
+  "description": "Telegram bot to check Minecraft server status and info",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
