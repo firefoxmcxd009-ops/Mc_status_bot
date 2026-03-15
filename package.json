@@ -1,12 +1,12 @@
 {
-  "name": "mc_status_telegram-bot",
+  "name": "telegram-bot-vercel",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "node-telegram-bot-api": "^0.61.0"
+    "node-telegram-bot-api": "^0.61.0",
+    "minecraft-server-util": "^5.2.0"
   }
 }
