@@ -1,12 +1,13 @@
 {
-  "name": "minecraft-status-bot",
+  "name": "minecraft-status-bot-pro",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-    "node-telegram-bot-api": "^0.61.0",
-    "mcstatus": "^1.0.0"
+    "node-telegram-bot-api": "^0.61.3",
+    "mcstatus": "^2.1.0",
+    "uuid": "^9.0.0"
   }
 }
