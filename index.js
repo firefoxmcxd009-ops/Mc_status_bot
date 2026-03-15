@@ -1,34 +1,96 @@
-import TelegramBot from 'node-telegram-bot-api';
-import { status } from 'mcstatus';
+const TelegramBot = require('node-telegram-bot-api');
+const axios = require('axios');
 
-// Bot Token
-const TOKEN = '8584566887:AAEI7OpsvG8-rq6bq6qO3s3BKqu64QidtSY';
-const bot = new TelegramBot(TOKEN, { polling: true });
+// ---------- CONFIG ----------
+const token = "8584566887:AAEI7OpsvG8-rq6bq6qO3s3BKqu64QidtSY"; // ដាក់ BOT TOKEN របស់អ្នក
+const server = "dinomc.org"; // Minecraft server IP
+const voteLink = "https://firefoxmckingdomstore.vercel.app/Rank%20Store"; // link server store
 
-// /ip command
-bot.onText(/\/ip/, (msg) => {
-    bot.sendMessage(msg.chat.id, 'Server IP: dinomc.org');
-});
+// ---------- INIT BOT ----------
+const bot = new TelegramBot(token, { polling: true });
 
-// /store command
-bot.onText(/\/store/, (msg) => {
-    bot.sendMessage(msg.chat.id, 'Visit our store: https://yourstore.example.com');
-});
-
-// /status command (Pro version: dynamic ping)
-bot.onText(/\/status/, async (msg) => {
+// ---------- /start ----------
+bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
-    try {
-        const res = await status('dinomc.org'); // default port 25565
-        const motd = res.description?.text || 'No MOTD';
-        const players = `${res.players.online}/${res.players.max}`;
-        const version = res.version.name;
+    const text = `
+សួស្ដី ${msg.from.first_name} 👋
+Commands available:
+/ip - show server IP
+/players - show player list
+/store - store link
+/ping - server ping
+/status - server online/offline
+`;
+    bot.sendMessage(chatId, text);
+});
 
-        const message = `🎮 Server Status: Online ✅\n📜 MOTD: ${motd}\n👥 Players: ${players}\n⚙️ Version: ${version}`;
-        bot.sendMessage(chatId, message);
+// ---------- /ip ----------
+bot.onText(/\/ip/, (msg) => {
+    const chatId = msg.chat.id;
+    bot.sendMessage(chatId, `🌐 Server IP: ${server}`);
+});
+
+// ---------- /players ----------
+bot.onText(/\/players/, async (msg) => {
+    const chatId = msg.chat.id;
+
+    try {
+        const res = await axios.get(`https://api.mcsrvstat.us/3/${server}`);
+        const data = res.data;
+
+        if (data.online) {
+            let players = "No players online 😴";
+            if (data.players.list) {
+                players = data.players.list.join(", ");
+            }
+            bot.sendMessage(chatId, `👥 Players online (${data.players.online}/${data.players.max}):\n${players}`);
+        } else {
+            bot.sendMessage(chatId, "🔴 Server Offline");
+        }
+
     } catch (err) {
-        bot.sendMessage(chatId, 'Server Status: Offline ❌');
+        bot.sendMessage(chatId, "❌ Error fetching player list");
     }
 });
 
-console.log('Pro Minecraft Bot is running!');
+// ---------- /store ----------
+bot.onText(/\/store/, (msg) => {
+    const chatId = msg.chat.id;
+    bot.sendMessage(chatId, `�️ Store: ${voteLink}`);
+});
+
+// ---------- /ping ----------
+bot.onText(/\/ping/, async (msg) => {
+    const chatId = msg.chat.id;
+    const start = Date.now();
+
+    try {
+        await axios.get(`https://api.mcsrvstat.us/3/${server}`);
+        const latency = Date.now() - start;
+        bot.sendMessage(chatId, `🏓 Server ping: ${latency} ms`);
+    } catch (err) {
+        bot.sendMessage(chatId, "❌ Server offline, cannot ping");
+    }
+});
+
+// ---------- /status ----------
+bot.onText(/\/status/, async (msg) => {
+    const chatId = msg.chat.id;
+
+    try {
+        const res = await axios.get(`https://api.mcsrvstat.us/3/${server}`);
+        const data = res.data;
+
+        if (data.online) {
+            bot.sendMessage(chatId,
+                `🟢 Server Online\n` +
+                `Players: ${data.players.online}/${data.players.max}`
+            );
+        } else {
+            bot.sendMessage(chatId, "🔴 Server Offline");
+        }
+
+    } catch (error) {
+        bot.sendMessage(chatId, "❌ Error checking server");
+    }
+});
